@@ -1,0 +1,62 @@
+# Dependencies and generated output
+node_modules/
+.build/
+dist/
+coverage/
+*.tsbuildinfo
+
+# Packet and test scratch space
+.packet-000-work/
+.tmp/
+tmp/
+temp/
+*.log
+
+# Local configuration and credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+credentials*.json
+service-account*.json
+
+# Runtime databases and SQLite sidecars
+*.db
+*.db-*
+*.sqlite
+*.sqlite-*
+*.sqlite3
+*.sqlite3-*
+
+# Runtime vaults, encrypted custody, and evidence bytes
+.cerbanimo/
+.vault/
+local-vault/
+runtime-vault/
+evidence/
+evidence-content/
+content-addressed-store/
+artifact-blobs/
+custody-keys/
+*.vault
+*.evidence
+
+# Local identity material
+local-identities/
+identity-custody/
+*.identity.local.json
+*.device-authorization.local.json
+
+# Reference archives and other binary release payloads stay outside Git
+*.zip
+
+# Editor and operating-system files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp

@@ -1,0 +1,29 @@
+{
+  "schemaVersion": "cerbanimo.reference-release-manifest/1.0.0",
+  "product": "Cerbanimo Constellary Reference Node",
+  "version": "0.4.0",
+  "releaseTag": "reference-node-v0.4.0",
+  "releaseTitle": "Cerbanimo Constellary Reference Node v0.4.0",
+  "asset": {
+    "filename": "Cerbanimo-Constellary-Reference-Node-v0.4.0.zip",
+    "bytes": 661736,
+    "sha256": "4f3f4ccf793ec33e4488fe456378f36d6b60ca6827efbdc3600e0c9e5f82898a",
+    "gitHistoryPolicy": "release-asset-only"
+  },
+  "status": "frozen-behavioral-exhibit",
+  "minimumNode": "22.13.0",
+  "protocols": [
+    "constellary.exchange/1",
+    "cerbanimo-chain/2",
+    "cerbanimo.identity-capsule/1",
+    "founding-commons/1"
+  ],
+  "referenceTestInventory": {
+    "core": 12,
+    "renderedHtml": 1,
+    "localServerSmoke": 1,
+    "federationSmoke": 1,
+    "foundingCommonsSmoke": 1
+  },
+  "rule": "Do not modify or commit the ZIP. Download it from the release, verify its exact byte count and SHA-256, and execute it only as a compatibility oracle."
+}

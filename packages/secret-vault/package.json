@@ -1,0 +1,10 @@
+{
+  "name": "@cerbanimo/secret-vault",
+  "version": "0.2.0-packet.002",
+  "private": true,
+  "type": "module",
+  "exports": "./src/index.mjs",
+  "engines": {
+    "node": ">=22.16.0"
+  }
+}

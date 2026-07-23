@@ -1,0 +1,23 @@
+{
+  "fixtureVersion": "packet-000/1",
+  "referenceVersion": "0.4.0",
+  "id": "false-proof",
+  "goldenScenarios": ["G-007"],
+  "requests": [
+    {
+      "method": "POST",
+      "path": "/api/tasks/<active-task-id>/submit",
+      "body": {
+        "evidence": "This is a false submission. I did not complete the task and have no real evidence.",
+        "proofLinks": ["https://example.test/fake"]
+      }
+    }
+  ],
+  "observedResponse": {
+    "status": 200,
+    "verified": false,
+    "coinsBefore": 0,
+    "coinsAfter": 0,
+    "taskStatusAfter": "active"
+  }
+}

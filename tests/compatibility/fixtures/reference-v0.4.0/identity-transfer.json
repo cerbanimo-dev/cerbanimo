@@ -1,0 +1,44 @@
+{
+  "fixtureVersion": "packet-000/1",
+  "referenceVersion": "0.4.0",
+  "id": "identity-transfer",
+  "goldenScenarios": ["G-020"],
+  "requests": [
+    {
+      "phase": "export",
+      "method": "POST",
+      "path": "/api/identity/export",
+      "body": {
+        "passphrase": "<correct-passphrase>"
+      }
+    },
+    {
+      "phase": "wrong-passphrase",
+      "method": "POST",
+      "path": "/api/identity/import",
+      "body": {
+        "passphrase": "<wrong-passphrase>",
+        "capsule": "<encrypted-capsule>"
+      }
+    },
+    {
+      "phase": "import",
+      "method": "POST",
+      "path": "/api/identity/import",
+      "body": {
+        "passphrase": "<correct-passphrase>",
+        "capsule": "<encrypted-capsule>"
+      }
+    }
+  ],
+  "observedResponse": {
+    "exportStatus": 200,
+    "capsuleProtocol": "cerbanimo.identity-capsule/1",
+    "wrongPassphraseStatus": 500,
+    "wrongPassphraseMutatedDestinationIdentity": false,
+    "importStatus": 201,
+    "receiptTool": "identity.import",
+    "rootIdentifierPreserved": true,
+    "earnedCoinsPreserved": true
+  }
+}

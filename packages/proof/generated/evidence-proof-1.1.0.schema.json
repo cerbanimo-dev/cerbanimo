@@ -1,0 +1,1428 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.cerbanimo.local/evidence-proof/1.1.0",
+  "title": "Cerbanimo Packet 003 evidence custody and deterministic proof contracts",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/EvidenceBundle"
+    },
+    {
+      "$ref": "#/$defs/ProofPolicy"
+    },
+    {
+      "$ref": "#/$defs/ProofResult"
+    }
+  ],
+  "$defs": {
+    "Actor": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": [
+            "kind",
+            "rootIdentityId",
+            "deviceId",
+            "roles"
+          ],
+          "properties": {
+            "kind": {
+              "const": "human"
+            },
+            "rootIdentityId": {
+              "type": "string",
+              "minLength": 1
+            },
+            "deviceId": {
+              "type": "string",
+              "minLength": 1
+            },
+            "roles": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "uniqueItems": true
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "kind",
+            "serviceId",
+            "delegatedByRootIdentityId",
+            "roles"
+          ],
+          "properties": {
+            "kind": {
+              "const": "service"
+            },
+            "serviceId": {
+              "type": "string",
+              "minLength": 1
+            },
+            "delegatedByRootIdentityId": {
+              "type": "string",
+              "minLength": 1
+            },
+            "roles": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "uniqueItems": true
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "DisclosureScope": {
+      "type": "object",
+      "required": [
+        "audiences",
+        "purposes",
+        "reviewerIdentityIds"
+      ],
+      "properties": {
+        "audiences": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "purposes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "reviewerIdentityIds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "RetentionPolicy": {
+      "type": "object",
+      "required": [
+        "policyId",
+        "mode",
+        "purgeEligibleAt",
+        "authorizedPurgerRoles"
+      ],
+      "properties": {
+        "policyId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "mode": {
+          "enum": [
+            "retain-until",
+            "purge-after",
+            "legal-hold"
+          ]
+        },
+        "purgeEligibleAt": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "authorizedPurgerRoles": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "ArtifactManifest": {
+      "type": "object",
+      "required": [
+        "artifactId",
+        "artifactKind",
+        "contentDigest",
+        "byteSize",
+        "mediaType",
+        "capture",
+        "requirementIds",
+        "privacyClassification",
+        "retentionPolicy",
+        "disclosureScope",
+        "publicMetadata"
+      ],
+      "properties": {
+        "artifactId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "artifactKind": {
+          "type": "string",
+          "minLength": 1
+        },
+        "contentDigest": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "byteSize": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "mediaType": {
+          "type": "string",
+          "minLength": 1
+        },
+        "capture": {
+          "type": "object",
+          "required": [
+            "kind",
+            "preserved",
+            "custodyId",
+            "capturedAt",
+            "capturedBy",
+            "sourceUri"
+          ],
+          "properties": {
+            "kind": {
+              "enum": [
+                "local-upload",
+                "constrained-fetch"
+              ]
+            },
+            "preserved": {
+              "const": true
+            },
+            "custodyId": {
+              "type": "string",
+              "minLength": 1
+            },
+            "capturedAt": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "capturedBy": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "required": [
+                    "kind",
+                    "rootIdentityId",
+                    "deviceId",
+                    "roles"
+                  ],
+                  "properties": {
+                    "kind": {
+                      "const": "human"
+                    },
+                    "rootIdentityId": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "deviceId": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "roles": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "uniqueItems": true
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "required": [
+                    "kind",
+                    "serviceId",
+                    "delegatedByRootIdentityId",
+                    "roles"
+                  ],
+                  "properties": {
+                    "kind": {
+                      "const": "service"
+                    },
+                    "serviceId": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "delegatedByRootIdentityId": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "roles": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "uniqueItems": true
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              ]
+            },
+            "sourceUri": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "additionalProperties": false
+        },
+        "requirementIds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "privacyClassification": {
+          "enum": [
+            "public",
+            "community",
+            "private",
+            "restricted"
+          ]
+        },
+        "retentionPolicy": {
+          "type": "object",
+          "required": [
+            "policyId",
+            "mode",
+            "purgeEligibleAt",
+            "authorizedPurgerRoles"
+          ],
+          "properties": {
+            "policyId": {
+              "type": "string",
+              "minLength": 1
+            },
+            "mode": {
+              "enum": [
+                "retain-until",
+                "purge-after",
+                "legal-hold"
+              ]
+            },
+            "purgeEligibleAt": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "authorizedPurgerRoles": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "uniqueItems": true
+            }
+          },
+          "additionalProperties": false
+        },
+        "disclosureScope": {
+          "type": "object",
+          "required": [
+            "audiences",
+            "purposes",
+            "reviewerIdentityIds"
+          ],
+          "properties": {
+            "audiences": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "uniqueItems": true
+            },
+            "purposes": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "uniqueItems": true
+            },
+            "reviewerIdentityIds": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "uniqueItems": true
+            }
+          },
+          "additionalProperties": false
+        },
+        "publicMetadata": {
+          "type": "object"
+        }
+      },
+      "additionalProperties": false
+    },
+    "RemoteReference": {
+      "type": "object",
+      "required": [
+        "referenceId",
+        "url",
+        "mediaType",
+        "preservationStatus",
+        "recordedAt",
+        "recordedBy",
+        "disclosureScope"
+      ],
+      "properties": {
+        "referenceId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "url": {
+          "type": "string",
+          "format": "uri"
+        },
+        "mediaType": {
+          "type": "string",
+          "minLength": 1
+        },
+        "preservationStatus": {
+          "const": "reference-only"
+        },
+        "recordedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "recordedBy": {
+          "oneOf": [
+            {
+              "type": "object",
+              "required": [
+                "kind",
+                "rootIdentityId",
+                "deviceId",
+                "roles"
+              ],
+              "properties": {
+                "kind": {
+                  "const": "human"
+                },
+                "rootIdentityId": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "deviceId": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "roles": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "uniqueItems": true
+                }
+              },
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "required": [
+                "kind",
+                "serviceId",
+                "delegatedByRootIdentityId",
+                "roles"
+              ],
+              "properties": {
+                "kind": {
+                  "const": "service"
+                },
+                "serviceId": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "delegatedByRootIdentityId": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "roles": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "uniqueItems": true
+                }
+              },
+              "additionalProperties": false
+            }
+          ]
+        },
+        "disclosureScope": {
+          "type": "object",
+          "required": [
+            "audiences",
+            "purposes",
+            "reviewerIdentityIds"
+          ],
+          "properties": {
+            "audiences": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "uniqueItems": true
+            },
+            "purposes": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "uniqueItems": true
+            },
+            "reviewerIdentityIds": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "uniqueItems": true
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "RequirementCoverage": {
+      "type": "object",
+      "required": [
+        "requirementId",
+        "artifactIds",
+        "declaration"
+      ],
+      "properties": {
+        "requirementId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "artifactIds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "declaration": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "EvidenceBundle": {
+      "type": "object",
+      "required": [
+        "schemaVersion",
+        "taskId",
+        "submissionId",
+        "authorIdentityId",
+        "evidenceCycleId",
+        "normalizedNarrative",
+        "artifacts",
+        "remoteReferences",
+        "requirementCoverage",
+        "narrativeDisclosureScope",
+        "evidencePolicyVersion",
+        "closureActor",
+        "closedAt",
+        "contentFingerprint",
+        "bundleDigest"
+      ],
+      "properties": {
+        "schemaVersion": {
+          "const": "cerbanimo.evidence/1.1.0"
+        },
+        "taskId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "submissionId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "authorIdentityId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidenceCycleId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "normalizedNarrative": {
+          "type": "string",
+          "minLength": 1
+        },
+        "artifacts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "artifactId",
+              "artifactKind",
+              "contentDigest",
+              "byteSize",
+              "mediaType",
+              "capture",
+              "requirementIds",
+              "privacyClassification",
+              "retentionPolicy",
+              "disclosureScope",
+              "publicMetadata"
+            ],
+            "properties": {
+              "artifactId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "artifactKind": {
+                "type": "string",
+                "minLength": 1
+              },
+              "contentDigest": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              },
+              "byteSize": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "mediaType": {
+                "type": "string",
+                "minLength": 1
+              },
+              "capture": {
+                "type": "object",
+                "required": [
+                  "kind",
+                  "preserved",
+                  "custodyId",
+                  "capturedAt",
+                  "capturedBy",
+                  "sourceUri"
+                ],
+                "properties": {
+                  "kind": {
+                    "enum": [
+                      "local-upload",
+                      "constrained-fetch"
+                    ]
+                  },
+                  "preserved": {
+                    "const": true
+                  },
+                  "custodyId": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "capturedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "capturedBy": {
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "required": [
+                          "kind",
+                          "rootIdentityId",
+                          "deviceId",
+                          "roles"
+                        ],
+                        "properties": {
+                          "kind": {
+                            "const": "human"
+                          },
+                          "rootIdentityId": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "deviceId": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "roles": {
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "uniqueItems": true
+                          }
+                        },
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "required": [
+                          "kind",
+                          "serviceId",
+                          "delegatedByRootIdentityId",
+                          "roles"
+                        ],
+                        "properties": {
+                          "kind": {
+                            "const": "service"
+                          },
+                          "serviceId": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "delegatedByRootIdentityId": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "roles": {
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "uniqueItems": true
+                          }
+                        },
+                        "additionalProperties": false
+                      }
+                    ]
+                  },
+                  "sourceUri": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  }
+                },
+                "additionalProperties": false
+              },
+              "requirementIds": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "uniqueItems": true
+              },
+              "privacyClassification": {
+                "enum": [
+                  "public",
+                  "community",
+                  "private",
+                  "restricted"
+                ]
+              },
+              "retentionPolicy": {
+                "type": "object",
+                "required": [
+                  "policyId",
+                  "mode",
+                  "purgeEligibleAt",
+                  "authorizedPurgerRoles"
+                ],
+                "properties": {
+                  "policyId": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "mode": {
+                    "enum": [
+                      "retain-until",
+                      "purge-after",
+                      "legal-hold"
+                    ]
+                  },
+                  "purgeEligibleAt": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "format": "date-time"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "authorizedPurgerRoles": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "uniqueItems": true
+                  }
+                },
+                "additionalProperties": false
+              },
+              "disclosureScope": {
+                "type": "object",
+                "required": [
+                  "audiences",
+                  "purposes",
+                  "reviewerIdentityIds"
+                ],
+                "properties": {
+                  "audiences": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "uniqueItems": true
+                  },
+                  "purposes": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "uniqueItems": true
+                  },
+                  "reviewerIdentityIds": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "uniqueItems": true
+                  }
+                },
+                "additionalProperties": false
+              },
+              "publicMetadata": {
+                "type": "object"
+              }
+            },
+            "additionalProperties": false
+          },
+          "uniqueItems": true
+        },
+        "remoteReferences": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "referenceId",
+              "url",
+              "mediaType",
+              "preservationStatus",
+              "recordedAt",
+              "recordedBy",
+              "disclosureScope"
+            ],
+            "properties": {
+              "referenceId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "url": {
+                "type": "string",
+                "format": "uri"
+              },
+              "mediaType": {
+                "type": "string",
+                "minLength": 1
+              },
+              "preservationStatus": {
+                "const": "reference-only"
+              },
+              "recordedAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "recordedBy": {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "required": [
+                      "kind",
+                      "rootIdentityId",
+                      "deviceId",
+                      "roles"
+                    ],
+                    "properties": {
+                      "kind": {
+                        "const": "human"
+                      },
+                      "rootIdentityId": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "deviceId": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "roles": {
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "uniqueItems": true
+                      }
+                    },
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "required": [
+                      "kind",
+                      "serviceId",
+                      "delegatedByRootIdentityId",
+                      "roles"
+                    ],
+                    "properties": {
+                      "kind": {
+                        "const": "service"
+                      },
+                      "serviceId": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "delegatedByRootIdentityId": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "roles": {
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "uniqueItems": true
+                      }
+                    },
+                    "additionalProperties": false
+                  }
+                ]
+              },
+              "disclosureScope": {
+                "type": "object",
+                "required": [
+                  "audiences",
+                  "purposes",
+                  "reviewerIdentityIds"
+                ],
+                "properties": {
+                  "audiences": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "uniqueItems": true
+                  },
+                  "purposes": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "uniqueItems": true
+                  },
+                  "reviewerIdentityIds": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "uniqueItems": true
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "additionalProperties": false
+          },
+          "uniqueItems": true
+        },
+        "requirementCoverage": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "requirementId",
+              "artifactIds",
+              "declaration"
+            ],
+            "properties": {
+              "requirementId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "artifactIds": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "uniqueItems": true
+              },
+              "declaration": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "additionalProperties": false
+          },
+          "uniqueItems": true
+        },
+        "narrativeDisclosureScope": {
+          "type": "object",
+          "required": [
+            "audiences",
+            "purposes",
+            "reviewerIdentityIds"
+          ],
+          "properties": {
+            "audiences": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "uniqueItems": true
+            },
+            "purposes": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "uniqueItems": true
+            },
+            "reviewerIdentityIds": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "uniqueItems": true
+            }
+          },
+          "additionalProperties": false
+        },
+        "evidencePolicyVersion": {
+          "type": "string",
+          "minLength": 1
+        },
+        "closureActor": {
+          "oneOf": [
+            {
+              "type": "object",
+              "required": [
+                "kind",
+                "rootIdentityId",
+                "deviceId",
+                "roles"
+              ],
+              "properties": {
+                "kind": {
+                  "const": "human"
+                },
+                "rootIdentityId": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "deviceId": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "roles": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "uniqueItems": true
+                }
+              },
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "required": [
+                "kind",
+                "serviceId",
+                "delegatedByRootIdentityId",
+                "roles"
+              ],
+              "properties": {
+                "kind": {
+                  "const": "service"
+                },
+                "serviceId": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "delegatedByRootIdentityId": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "roles": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "uniqueItems": true
+                }
+              },
+              "additionalProperties": false
+            }
+          ]
+        },
+        "closedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "contentFingerprint": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "bundleDigest": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ProofPolicy": {
+      "type": "object",
+      "required": [
+        "schemaVersion",
+        "policyVersion",
+        "evidenceSchemaVersion",
+        "requiredArtifactKinds",
+        "allowedMediaTypes",
+        "maxArtifactBytes",
+        "maxTotalBytes",
+        "requiredRequirementIds",
+        "explicitNonCompletionPhrases",
+        "machineAssertionIds"
+      ],
+      "properties": {
+        "schemaVersion": {
+          "const": "cerbanimo.proof-policy/1.1.0"
+        },
+        "policyVersion": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidenceSchemaVersion": {
+          "const": "cerbanimo.evidence/1.1.0"
+        },
+        "requiredArtifactKinds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "allowedMediaTypes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "maxArtifactBytes": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "maxTotalBytes": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "requiredRequirementIds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "explicitNonCompletionPhrases": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "machineAssertionIds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "ProofCheck": {
+      "type": "object",
+      "required": [
+        "checkId",
+        "passed",
+        "reasonCode",
+        "details"
+      ],
+      "properties": {
+        "checkId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "passed": {
+          "type": "boolean"
+        },
+        "reasonCode": {
+          "type": "string",
+          "minLength": 1
+        },
+        "details": {
+          "type": "object"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ProofResult": {
+      "type": "object",
+      "required": [
+        "schemaVersion",
+        "taskId",
+        "submissionId",
+        "evidenceCycleId",
+        "evidenceSchemaVersion",
+        "evidenceDigest",
+        "contentFingerprint",
+        "policySchemaVersion",
+        "policyVersion",
+        "decision",
+        "meaning",
+        "truthClaim",
+        "checks",
+        "resultCodes",
+        "evaluatedBy",
+        "evaluatedAt"
+      ],
+      "properties": {
+        "schemaVersion": {
+          "const": "cerbanimo.proof-result/1.1.0"
+        },
+        "taskId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "submissionId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidenceCycleId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidenceSchemaVersion": {
+          "const": "cerbanimo.evidence/1.1.0"
+        },
+        "evidenceDigest": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "contentFingerprint": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "policySchemaVersion": {
+          "const": "cerbanimo.proof-policy/1.1.0"
+        },
+        "policyVersion": {
+          "type": "string",
+          "minLength": 1
+        },
+        "decision": {
+          "enum": [
+            "pass",
+            "reject"
+          ]
+        },
+        "meaning": {
+          "enum": [
+            "eligible-for-independent-review",
+            "structurally-ineligible"
+          ]
+        },
+        "truthClaim": {
+          "const": "none"
+        },
+        "checks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "checkId",
+              "passed",
+              "reasonCode",
+              "details"
+            ],
+            "properties": {
+              "checkId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "passed": {
+                "type": "boolean"
+              },
+              "reasonCode": {
+                "type": "string",
+                "minLength": 1
+              },
+              "details": {
+                "type": "object"
+              }
+            },
+            "additionalProperties": false
+          },
+          "minItems": 1
+        },
+        "resultCodes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "evaluatedBy": {
+          "oneOf": [
+            {
+              "type": "object",
+              "required": [
+                "kind",
+                "rootIdentityId",
+                "deviceId",
+                "roles"
+              ],
+              "properties": {
+                "kind": {
+                  "const": "human"
+                },
+                "rootIdentityId": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "deviceId": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "roles": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "uniqueItems": true
+                }
+              },
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "required": [
+                "kind",
+                "serviceId",
+                "delegatedByRootIdentityId",
+                "roles"
+              ],
+              "properties": {
+                "kind": {
+                  "const": "service"
+                },
+                "serviceId": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "delegatedByRootIdentityId": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "roles": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "uniqueItems": true
+                }
+              },
+              "additionalProperties": false
+            }
+          ]
+        },
+        "evaluatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

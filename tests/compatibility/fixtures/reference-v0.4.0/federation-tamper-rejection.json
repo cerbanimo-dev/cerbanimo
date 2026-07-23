@@ -1,0 +1,29 @@
+{
+  "fixtureVersion": "packet-000/1",
+  "referenceVersion": "0.4.0",
+  "id": "federation-tamper-rejection",
+  "goldenScenarios": ["G-022"],
+  "requests": [
+    {
+      "phase": "link-test-peer",
+      "method": "POST",
+      "path": "/api/peers",
+      "body": {
+        "baseUrl": "<local-test-peer-url>",
+        "token": "<test-token>"
+      }
+    },
+    {
+      "phase": "sync-tampered-record",
+      "method": "POST",
+      "path": "/api/peers/<peer-id>/sync"
+    }
+  ],
+  "observedResponse": {
+    "linkStatus": 201,
+    "syncStatus": 200,
+    "accepted": 0,
+    "rejectedSignatures": 1,
+    "tamperedRecordBecameRemoteSignal": false
+  }
+}
