@@ -35,7 +35,10 @@ export async function verifyReferenceArchive(archive = referenceArchivePath()) {
 export async function materializeReference() {
   const verified = await verifyReferenceArchive();
   const extractionDirectory = await mkdtemp(path.join(os.tmpdir(), "cerbanimo-packet-000-oracle-"));
-  const result = spawnSync("tar", ["-xf", verified.archive, "-C", extractionDirectory], {
+  const extractor = process.platform === "win32"
+    ? { command: "tar", arguments: ["-xf", verified.archive, "-C", extractionDirectory] }
+    : { command: "unzip", arguments: ["-q", verified.archive, "-d", extractionDirectory] };
+  const result = spawnSync(extractor.command, extractor.arguments, {
     encoding: "utf8",
     windowsHide: true,
   });
