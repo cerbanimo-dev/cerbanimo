@@ -23,6 +23,7 @@
     "test:catalog": "node --test tests/compatibility/scenario-catalog.test.mjs"
   },
   "devDependencies": {
+    "@types/node": "22.16.5",
     "typescript": "5.9.3"
   }
 }
