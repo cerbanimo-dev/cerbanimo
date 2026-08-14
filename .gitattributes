@@ -1,0 +1,17 @@
+* text=auto
+
+*.js text eol=lf
+*.mjs text eol=lf
+*.ts text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+
+# These accepted artifacts are hashed as exact bytes and must never undergo
+# line-ending normalization, formatting, or regeneration.
+packages/schemas/generated/*.json -text
+packages/proof/generated/*.json -text
+packages/review/generated/*.json -text
+
+*.zip binary

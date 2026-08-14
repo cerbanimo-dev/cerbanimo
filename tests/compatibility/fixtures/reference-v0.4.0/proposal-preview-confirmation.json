@@ -1,0 +1,39 @@
+{
+  "fixtureVersion": "packet-000/1",
+  "referenceVersion": "0.4.0",
+  "id": "proposal-preview-confirmation",
+  "goldenScenarios": ["G-002", "G-009", "G-010", "G-011"],
+  "requests": [
+    {
+      "phase": "preview",
+      "method": "POST",
+      "path": "/api/kamiya",
+      "body": {
+        "message": "What if we also built out a quick check in / out library app and included QR codes? Add doing all of that to the Cerbanimo plan.",
+        "mode": "plain",
+        "projectId": "<project-id>",
+        "threadId": "<thread-id>"
+      }
+    },
+    {
+      "phase": "confirm",
+      "method": "POST",
+      "path": "/api/actions/<proposal-id>/confirm"
+    }
+  ],
+  "observedResponse": {
+    "setupStatus": 201,
+    "initialTasksAtLeast": 4,
+    "firstTaskStatus": "active",
+    "previewStatus": 200,
+    "proposalProtocol": "constellary.exchange/1",
+    "proposalStatus": "pending",
+    "proposalTool": "constellary.exchange",
+    "containsAppendTasks": true,
+    "previewMutatedTaskCount": false,
+    "confirmStatus": 201,
+    "receiptStatus": "executed",
+    "receiptTool": "constellary.exchange",
+    "confirmedTaskCountIncreased": true
+  }
+}

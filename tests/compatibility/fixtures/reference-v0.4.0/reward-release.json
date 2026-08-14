@@ -1,0 +1,28 @@
+{
+  "fixtureVersion": "packet-000/1",
+  "referenceVersion": "0.4.0",
+  "id": "reward-release",
+  "goldenScenarios": ["G-017", "G-018"],
+  "requests": [
+    {
+      "phase": "remote-review",
+      "method": "POST",
+      "path": "/api/peers/<peer-id>/sync"
+    },
+    {
+      "phase": "observe",
+      "method": "GET",
+      "path": "/api/bootstrap"
+    }
+  ],
+  "observedResponse": {
+    "syncStatus": 200,
+    "auditsReviewed": 1,
+    "taskStatusAfterQuorum": "sealed",
+    "auditStatusAfterQuorum": "approved",
+    "returnedVotes": 2,
+    "coinsReleased": true,
+    "fieldSpecimenCreated": true,
+    "referenceBoundary": "approval and reward release are coupled in v0.4.0; this is not successor settlement evidence"
+  }
+}

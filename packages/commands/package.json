@@ -1,0 +1,10 @@
+{
+  "name": "@cerbanimo/commands",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "exports": "./src/index.ts",
+  "dependencies": {
+    "@cerbanimo/schemas": "1.0.0"
+  }
+}

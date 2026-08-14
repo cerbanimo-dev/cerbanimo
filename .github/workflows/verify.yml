@@ -1,0 +1,55 @@
+name: Verify Packet 000-003 foundation
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - packet-003-foundation
+
+permissions:
+  contents: read
+
+concurrency:
+  group: verify-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  packet-foundation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v7
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22.16.0
+          cache: npm
+
+      - name: Install exact dependencies
+        run: npm ci
+
+      - name: Verify publication boundary
+        run: npm run verify:publication
+
+      - name: Download the frozen reference release asset
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/cerbanimo-reference"
+          gh release download reference-node-v0.4.0 \
+            --repo "$GITHUB_REPOSITORY" \
+            --pattern "Cerbanimo-Constellary-Reference-Node-v0.4.0.zip" \
+            --dir "$RUNNER_TEMP/cerbanimo-reference"
+
+      - name: Verify the reference asset checksum
+        run: |
+          echo "4f3f4ccf793ec33e4488fe456378f36d6b60ca6827efbdc3600e0c9e5f82898a  $RUNNER_TEMP/cerbanimo-reference/Cerbanimo-Constellary-Reference-Node-v0.4.0.zip" | sha256sum --check --strict
+
+      - name: Run Packet 000-003
+        env:
+          CERBANIMO_REFERENCE_ARCHIVE: ${{ runner.temp }}/cerbanimo-reference/Cerbanimo-Constellary-Reference-Node-v0.4.0.zip
+        run: npm test

@@ -1,0 +1,12 @@
+{
+  "name": "@cerbanimo/domain",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "exports": "./src/index.ts",
+  "dependencies": {
+    "@cerbanimo/commands": "1.0.0",
+    "@cerbanimo/events": "1.0.0",
+    "@cerbanimo/schemas": "1.0.0"
+  }
+}

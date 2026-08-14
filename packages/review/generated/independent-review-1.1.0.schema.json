@@ -1,0 +1,1787 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.cerbanimo.local/independent-review/1.1.0",
+  "title": "Cerbanimo Packet 003 independent-review contracts",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/ReviewerPoolSnapshot"
+    },
+    {
+      "$ref": "#/$defs/ReviewContract"
+    },
+    {
+      "$ref": "#/$defs/ReviewPacket"
+    },
+    {
+      "$ref": "#/$defs/ReviewAttestation"
+    }
+  ],
+  "$defs": {
+    "ReviewerCredential": {
+      "type": "object",
+      "required": [
+        "credentialId",
+        "reviewerIdentityId",
+        "controllingIdentityId",
+        "reviewerKind",
+        "issuer",
+        "scopes",
+        "assuranceLevel",
+        "publicKey",
+        "algorithm",
+        "issuedAt",
+        "expiresAt",
+        "status",
+        "proof"
+      ],
+      "properties": {
+        "credentialId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reviewerIdentityId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "controllingIdentityId": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "reviewerKind": {
+          "enum": [
+            "human",
+            "model"
+          ]
+        },
+        "issuer": {
+          "type": "string",
+          "minLength": 1
+        },
+        "scopes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "assuranceLevel": {
+          "enum": [
+            "substantial",
+            "high",
+            "service"
+          ]
+        },
+        "publicKey": {
+          "type": "string",
+          "minLength": 1
+        },
+        "algorithm": {
+          "const": "Ed25519"
+        },
+        "issuedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "expiresAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "status": {
+          "enum": [
+            "active",
+            "revoked"
+          ]
+        },
+        "proof": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "ConflictDisclosure": {
+      "type": "object",
+      "required": [
+        "disclosureId",
+        "reviewerIdentityId",
+        "evidenceDigest",
+        "hasConflict",
+        "conflictTypes",
+        "statement",
+        "disclosedAt",
+        "signature"
+      ],
+      "properties": {
+        "disclosureId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reviewerIdentityId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidenceDigest": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "hasConflict": {
+          "type": "boolean"
+        },
+        "conflictTypes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "statement": {
+          "type": "string",
+          "minLength": 1
+        },
+        "disclosedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "signature": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "ReviewerCandidate": {
+      "type": "object",
+      "required": [
+        "reviewerIdentityId",
+        "controllingIdentityId",
+        "reviewerKind",
+        "authorized",
+        "credential",
+        "conflictDisclosure"
+      ],
+      "properties": {
+        "reviewerIdentityId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "controllingIdentityId": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "reviewerKind": {
+          "enum": [
+            "human",
+            "model"
+          ]
+        },
+        "authorized": {
+          "type": "boolean"
+        },
+        "credential": {
+          "type": "object",
+          "required": [
+            "credentialId",
+            "reviewerIdentityId",
+            "controllingIdentityId",
+            "reviewerKind",
+            "issuer",
+            "scopes",
+            "assuranceLevel",
+            "publicKey",
+            "algorithm",
+            "issuedAt",
+            "expiresAt",
+            "status",
+            "proof"
+          ],
+          "properties": {
+            "credentialId": {
+              "type": "string",
+              "minLength": 1
+            },
+            "reviewerIdentityId": {
+              "type": "string",
+              "minLength": 1
+            },
+            "controllingIdentityId": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "reviewerKind": {
+              "enum": [
+                "human",
+                "model"
+              ]
+            },
+            "issuer": {
+              "type": "string",
+              "minLength": 1
+            },
+            "scopes": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "uniqueItems": true
+            },
+            "assuranceLevel": {
+              "enum": [
+                "substantial",
+                "high",
+                "service"
+              ]
+            },
+            "publicKey": {
+              "type": "string",
+              "minLength": 1
+            },
+            "algorithm": {
+              "const": "Ed25519"
+            },
+            "issuedAt": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "expiresAt": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "status": {
+              "enum": [
+                "active",
+                "revoked"
+              ]
+            },
+            "proof": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "additionalProperties": false
+        },
+        "conflictDisclosure": {
+          "type": "object",
+          "required": [
+            "disclosureId",
+            "reviewerIdentityId",
+            "evidenceDigest",
+            "hasConflict",
+            "conflictTypes",
+            "statement",
+            "disclosedAt",
+            "signature"
+          ],
+          "properties": {
+            "disclosureId": {
+              "type": "string",
+              "minLength": 1
+            },
+            "reviewerIdentityId": {
+              "type": "string",
+              "minLength": 1
+            },
+            "evidenceDigest": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            "hasConflict": {
+              "type": "boolean"
+            },
+            "conflictTypes": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "uniqueItems": true
+            },
+            "statement": {
+              "type": "string",
+              "minLength": 1
+            },
+            "disclosedAt": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "signature": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "ReviewerPoolSnapshot": {
+      "type": "object",
+      "required": [
+        "schemaVersion",
+        "taskId",
+        "submissionId",
+        "evidenceDigest",
+        "policyVersion",
+        "authorIdentityId",
+        "taskOwnerIdentityId",
+        "excludeTaskOwner",
+        "snapshotAt",
+        "eligible",
+        "exclusions",
+        "selectionCaveat",
+        "poolDigest"
+      ],
+      "properties": {
+        "schemaVersion": {
+          "const": "cerbanimo.reviewer-pool/1.1.0"
+        },
+        "taskId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "submissionId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidenceDigest": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "policyVersion": {
+          "type": "string",
+          "minLength": 1
+        },
+        "authorIdentityId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "taskOwnerIdentityId": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "excludeTaskOwner": {
+          "type": "boolean"
+        },
+        "snapshotAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "eligible": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "reviewerIdentityId",
+              "controllingIdentityId",
+              "reviewerKind",
+              "authorized",
+              "credential",
+              "conflictDisclosure"
+            ],
+            "properties": {
+              "reviewerIdentityId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "controllingIdentityId": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "reviewerKind": {
+                "enum": [
+                  "human",
+                  "model"
+                ]
+              },
+              "authorized": {
+                "type": "boolean"
+              },
+              "credential": {
+                "type": "object",
+                "required": [
+                  "credentialId",
+                  "reviewerIdentityId",
+                  "controllingIdentityId",
+                  "reviewerKind",
+                  "issuer",
+                  "scopes",
+                  "assuranceLevel",
+                  "publicKey",
+                  "algorithm",
+                  "issuedAt",
+                  "expiresAt",
+                  "status",
+                  "proof"
+                ],
+                "properties": {
+                  "credentialId": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "reviewerIdentityId": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "controllingIdentityId": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "reviewerKind": {
+                    "enum": [
+                      "human",
+                      "model"
+                    ]
+                  },
+                  "issuer": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "scopes": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "uniqueItems": true
+                  },
+                  "assuranceLevel": {
+                    "enum": [
+                      "substantial",
+                      "high",
+                      "service"
+                    ]
+                  },
+                  "publicKey": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "algorithm": {
+                    "const": "Ed25519"
+                  },
+                  "issuedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "expiresAt": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "status": {
+                    "enum": [
+                      "active",
+                      "revoked"
+                    ]
+                  },
+                  "proof": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "additionalProperties": false
+              },
+              "conflictDisclosure": {
+                "type": "object",
+                "required": [
+                  "disclosureId",
+                  "reviewerIdentityId",
+                  "evidenceDigest",
+                  "hasConflict",
+                  "conflictTypes",
+                  "statement",
+                  "disclosedAt",
+                  "signature"
+                ],
+                "properties": {
+                  "disclosureId": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "reviewerIdentityId": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "evidenceDigest": {
+                    "type": "string",
+                    "pattern": "^[a-f0-9]{64}$"
+                  },
+                  "hasConflict": {
+                    "type": "boolean"
+                  },
+                  "conflictTypes": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "uniqueItems": true
+                  },
+                  "statement": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "disclosedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "signature": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "additionalProperties": false
+          },
+          "uniqueItems": true
+        },
+        "exclusions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "reviewerIdentityId",
+              "reason"
+            ],
+            "properties": {
+              "reviewerIdentityId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "selectionCaveat": {
+          "type": "string",
+          "minLength": 1
+        },
+        "poolDigest": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ReviewAssignment": {
+      "type": "object",
+      "required": [
+        "assignmentId",
+        "ordinal",
+        "round",
+        "reviewerIdentityId",
+        "controllingIdentityId",
+        "reviewerKind",
+        "credential",
+        "conflictDisclosure",
+        "assignedAt",
+        "expiresAt",
+        "status"
+      ],
+      "properties": {
+        "assignmentId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "ordinal": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "round": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "reviewerIdentityId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "controllingIdentityId": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "reviewerKind": {
+          "enum": [
+            "human",
+            "model"
+          ]
+        },
+        "credential": {
+          "type": "object",
+          "required": [
+            "credentialId",
+            "reviewerIdentityId",
+            "controllingIdentityId",
+            "reviewerKind",
+            "issuer",
+            "scopes",
+            "assuranceLevel",
+            "publicKey",
+            "algorithm",
+            "issuedAt",
+            "expiresAt",
+            "status",
+            "proof"
+          ],
+          "properties": {
+            "credentialId": {
+              "type": "string",
+              "minLength": 1
+            },
+            "reviewerIdentityId": {
+              "type": "string",
+              "minLength": 1
+            },
+            "controllingIdentityId": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "reviewerKind": {
+              "enum": [
+                "human",
+                "model"
+              ]
+            },
+            "issuer": {
+              "type": "string",
+              "minLength": 1
+            },
+            "scopes": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "uniqueItems": true
+            },
+            "assuranceLevel": {
+              "enum": [
+                "substantial",
+                "high",
+                "service"
+              ]
+            },
+            "publicKey": {
+              "type": "string",
+              "minLength": 1
+            },
+            "algorithm": {
+              "const": "Ed25519"
+            },
+            "issuedAt": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "expiresAt": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "status": {
+              "enum": [
+                "active",
+                "revoked"
+              ]
+            },
+            "proof": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "additionalProperties": false
+        },
+        "conflictDisclosure": {
+          "type": "object",
+          "required": [
+            "disclosureId",
+            "reviewerIdentityId",
+            "evidenceDigest",
+            "hasConflict",
+            "conflictTypes",
+            "statement",
+            "disclosedAt",
+            "signature"
+          ],
+          "properties": {
+            "disclosureId": {
+              "type": "string",
+              "minLength": 1
+            },
+            "reviewerIdentityId": {
+              "type": "string",
+              "minLength": 1
+            },
+            "evidenceDigest": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            "hasConflict": {
+              "type": "boolean"
+            },
+            "conflictTypes": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "uniqueItems": true
+            },
+            "statement": {
+              "type": "string",
+              "minLength": 1
+            },
+            "disclosedAt": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "signature": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "additionalProperties": false
+        },
+        "assignedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "expiresAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "status": {
+          "enum": [
+            "assigned",
+            "returned",
+            "expired",
+            "revoked"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "ReviewContract": {
+      "type": "object",
+      "required": [
+        "schemaVersion",
+        "reviewContractId",
+        "taskId",
+        "submissionId",
+        "evidenceDigest",
+        "policyVersion",
+        "openingBasis",
+        "appealId",
+        "poolSnapshot",
+        "poolDigest",
+        "assignmentSeedCommitment",
+        "revealedAssignmentSeed",
+        "assignmentOrder",
+        "assignments",
+        "quorum",
+        "maxReassignments",
+        "reassignmentsUsed",
+        "assignedAt",
+        "expiresAt"
+      ],
+      "properties": {
+        "schemaVersion": {
+          "const": "cerbanimo.review/1.1.0"
+        },
+        "reviewContractId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "taskId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "submissionId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidenceDigest": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "policyVersion": {
+          "type": "string",
+          "minLength": 1
+        },
+        "openingBasis": {
+          "enum": [
+            "deterministic-pass",
+            "appeal-overturn"
+          ]
+        },
+        "appealId": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "poolSnapshot": {
+          "type": "object",
+          "required": [
+            "schemaVersion",
+            "taskId",
+            "submissionId",
+            "evidenceDigest",
+            "policyVersion",
+            "authorIdentityId",
+            "taskOwnerIdentityId",
+            "excludeTaskOwner",
+            "snapshotAt",
+            "eligible",
+            "exclusions",
+            "selectionCaveat",
+            "poolDigest"
+          ],
+          "properties": {
+            "schemaVersion": {
+              "const": "cerbanimo.reviewer-pool/1.1.0"
+            },
+            "taskId": {
+              "type": "string",
+              "minLength": 1
+            },
+            "submissionId": {
+              "type": "string",
+              "minLength": 1
+            },
+            "evidenceDigest": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            "policyVersion": {
+              "type": "string",
+              "minLength": 1
+            },
+            "authorIdentityId": {
+              "type": "string",
+              "minLength": 1
+            },
+            "taskOwnerIdentityId": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "excludeTaskOwner": {
+              "type": "boolean"
+            },
+            "snapshotAt": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "eligible": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "reviewerIdentityId",
+                  "controllingIdentityId",
+                  "reviewerKind",
+                  "authorized",
+                  "credential",
+                  "conflictDisclosure"
+                ],
+                "properties": {
+                  "reviewerIdentityId": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "controllingIdentityId": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "reviewerKind": {
+                    "enum": [
+                      "human",
+                      "model"
+                    ]
+                  },
+                  "authorized": {
+                    "type": "boolean"
+                  },
+                  "credential": {
+                    "type": "object",
+                    "required": [
+                      "credentialId",
+                      "reviewerIdentityId",
+                      "controllingIdentityId",
+                      "reviewerKind",
+                      "issuer",
+                      "scopes",
+                      "assuranceLevel",
+                      "publicKey",
+                      "algorithm",
+                      "issuedAt",
+                      "expiresAt",
+                      "status",
+                      "proof"
+                    ],
+                    "properties": {
+                      "credentialId": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "reviewerIdentityId": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "controllingIdentityId": {
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "reviewerKind": {
+                        "enum": [
+                          "human",
+                          "model"
+                        ]
+                      },
+                      "issuer": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "scopes": {
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "uniqueItems": true
+                      },
+                      "assuranceLevel": {
+                        "enum": [
+                          "substantial",
+                          "high",
+                          "service"
+                        ]
+                      },
+                      "publicKey": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "algorithm": {
+                        "const": "Ed25519"
+                      },
+                      "issuedAt": {
+                        "type": "string",
+                        "format": "date-time"
+                      },
+                      "expiresAt": {
+                        "type": "string",
+                        "format": "date-time"
+                      },
+                      "status": {
+                        "enum": [
+                          "active",
+                          "revoked"
+                        ]
+                      },
+                      "proof": {
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    },
+                    "additionalProperties": false
+                  },
+                  "conflictDisclosure": {
+                    "type": "object",
+                    "required": [
+                      "disclosureId",
+                      "reviewerIdentityId",
+                      "evidenceDigest",
+                      "hasConflict",
+                      "conflictTypes",
+                      "statement",
+                      "disclosedAt",
+                      "signature"
+                    ],
+                    "properties": {
+                      "disclosureId": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "reviewerIdentityId": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "evidenceDigest": {
+                        "type": "string",
+                        "pattern": "^[a-f0-9]{64}$"
+                      },
+                      "hasConflict": {
+                        "type": "boolean"
+                      },
+                      "conflictTypes": {
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "uniqueItems": true
+                      },
+                      "statement": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "disclosedAt": {
+                        "type": "string",
+                        "format": "date-time"
+                      },
+                      "signature": {
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    },
+                    "additionalProperties": false
+                  }
+                },
+                "additionalProperties": false
+              },
+              "uniqueItems": true
+            },
+            "exclusions": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "reviewerIdentityId",
+                  "reason"
+                ],
+                "properties": {
+                  "reviewerIdentityId": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "reason": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "selectionCaveat": {
+              "type": "string",
+              "minLength": 1
+            },
+            "poolDigest": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            }
+          },
+          "additionalProperties": false
+        },
+        "poolDigest": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "assignmentSeedCommitment": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "revealedAssignmentSeed": {
+          "type": "string",
+          "minLength": 1
+        },
+        "assignmentOrder": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "assignments": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "assignmentId",
+              "ordinal",
+              "round",
+              "reviewerIdentityId",
+              "controllingIdentityId",
+              "reviewerKind",
+              "credential",
+              "conflictDisclosure",
+              "assignedAt",
+              "expiresAt",
+              "status"
+            ],
+            "properties": {
+              "assignmentId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "ordinal": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "round": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "reviewerIdentityId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "controllingIdentityId": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "reviewerKind": {
+                "enum": [
+                  "human",
+                  "model"
+                ]
+              },
+              "credential": {
+                "type": "object",
+                "required": [
+                  "credentialId",
+                  "reviewerIdentityId",
+                  "controllingIdentityId",
+                  "reviewerKind",
+                  "issuer",
+                  "scopes",
+                  "assuranceLevel",
+                  "publicKey",
+                  "algorithm",
+                  "issuedAt",
+                  "expiresAt",
+                  "status",
+                  "proof"
+                ],
+                "properties": {
+                  "credentialId": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "reviewerIdentityId": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "controllingIdentityId": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "reviewerKind": {
+                    "enum": [
+                      "human",
+                      "model"
+                    ]
+                  },
+                  "issuer": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "scopes": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "uniqueItems": true
+                  },
+                  "assuranceLevel": {
+                    "enum": [
+                      "substantial",
+                      "high",
+                      "service"
+                    ]
+                  },
+                  "publicKey": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "algorithm": {
+                    "const": "Ed25519"
+                  },
+                  "issuedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "expiresAt": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "status": {
+                    "enum": [
+                      "active",
+                      "revoked"
+                    ]
+                  },
+                  "proof": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "additionalProperties": false
+              },
+              "conflictDisclosure": {
+                "type": "object",
+                "required": [
+                  "disclosureId",
+                  "reviewerIdentityId",
+                  "evidenceDigest",
+                  "hasConflict",
+                  "conflictTypes",
+                  "statement",
+                  "disclosedAt",
+                  "signature"
+                ],
+                "properties": {
+                  "disclosureId": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "reviewerIdentityId": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "evidenceDigest": {
+                    "type": "string",
+                    "pattern": "^[a-f0-9]{64}$"
+                  },
+                  "hasConflict": {
+                    "type": "boolean"
+                  },
+                  "conflictTypes": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "uniqueItems": true
+                  },
+                  "statement": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "disclosedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "signature": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "additionalProperties": false
+              },
+              "assignedAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "expiresAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "status": {
+                "enum": [
+                  "assigned",
+                  "returned",
+                  "expired",
+                  "revoked"
+                ]
+              }
+            },
+            "additionalProperties": false
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "quorum": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "maxReassignments": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 20
+        },
+        "reassignmentsUsed": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 20
+        },
+        "assignedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "expiresAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ReviewReason": {
+      "type": "object",
+      "required": [
+        "code",
+        "explanation"
+      ],
+      "properties": {
+        "code": {
+          "type": "string",
+          "minLength": 1
+        },
+        "explanation": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "ReviewCitation": {
+      "type": "object",
+      "required": [
+        "artifactId",
+        "manifestPath",
+        "excerptDigest"
+      ],
+      "properties": {
+        "artifactId": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "manifestPath": {
+          "type": "string",
+          "minLength": 1
+        },
+        "excerptDigest": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "ReviewAttestation": {
+      "type": "object",
+      "required": [
+        "schemaVersion",
+        "reviewContractId",
+        "assignmentId",
+        "taskId",
+        "submissionId",
+        "evidenceDigest",
+        "policyVersion",
+        "reviewerIdentityId",
+        "credentialId",
+        "credentialDigest",
+        "decision",
+        "confidence",
+        "reasons",
+        "citations",
+        "issuedAt",
+        "attestationId",
+        "signature"
+      ],
+      "properties": {
+        "schemaVersion": {
+          "const": "cerbanimo.review-attestation/1.1.0"
+        },
+        "reviewContractId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "assignmentId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "taskId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "submissionId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidenceDigest": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "policyVersion": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reviewerIdentityId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "credentialId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "credentialDigest": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "decision": {
+          "enum": [
+            "approve",
+            "reject",
+            "abstain"
+          ]
+        },
+        "confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "reasons": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "code",
+              "explanation"
+            ],
+            "properties": {
+              "code": {
+                "type": "string",
+                "minLength": 1
+              },
+              "explanation": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "additionalProperties": false
+          },
+          "minItems": 1
+        },
+        "citations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "artifactId",
+              "manifestPath",
+              "excerptDigest"
+            ],
+            "properties": {
+              "artifactId": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "manifestPath": {
+                "type": "string",
+                "minLength": 1
+              },
+              "excerptDigest": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "pattern": "^[a-f0-9]{64}$"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "issuedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "attestationId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "signature": {
+          "type": "object",
+          "required": [
+            "algorithm",
+            "value"
+          ],
+          "properties": {
+            "algorithm": {
+              "const": "Ed25519"
+            },
+            "value": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "ReviewPacket": {
+      "type": "object",
+      "required": [
+        "schemaVersion",
+        "reviewContractId",
+        "assignmentId",
+        "reviewerIdentityId",
+        "taskId",
+        "submissionId",
+        "evidenceDigest",
+        "policyVersion",
+        "audience",
+        "purpose",
+        "issuedAt",
+        "expiresAt",
+        "instructions",
+        "untrustedEvidence",
+        "packetDigest"
+      ],
+      "properties": {
+        "schemaVersion": {
+          "const": "cerbanimo.review-packet/1.1.0"
+        },
+        "reviewContractId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "assignmentId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reviewerIdentityId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "taskId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "submissionId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidenceDigest": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "policyVersion": {
+          "type": "string",
+          "minLength": 1
+        },
+        "audience": {
+          "type": "string",
+          "minLength": 1
+        },
+        "purpose": {
+          "type": "string",
+          "minLength": 1
+        },
+        "issuedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "expiresAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "instructions": {
+          "type": "object",
+          "required": [
+            "authority",
+            "evidenceTreatment",
+            "allowedDecisions",
+            "truthBoundary"
+          ],
+          "properties": {
+            "authority": {
+              "type": "string",
+              "minLength": 1
+            },
+            "evidenceTreatment": {
+              "type": "string",
+              "minLength": 1
+            },
+            "allowedDecisions": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "uniqueItems": true
+            },
+            "truthBoundary": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "additionalProperties": false
+        },
+        "untrustedEvidence": {
+          "type": "object",
+          "required": [
+            "delimiterStart",
+            "normalizedNarrative",
+            "artifactManifests",
+            "remoteReferences",
+            "requirementCoverage",
+            "delimiterEnd"
+          ],
+          "properties": {
+            "delimiterStart": {
+              "const": "-----BEGIN UNTRUSTED EVIDENCE CONTENT-----"
+            },
+            "normalizedNarrative": {
+              "type": "string",
+              "minLength": 1
+            },
+            "artifactManifests": {
+              "type": "array",
+              "items": {
+                "type": "object"
+              }
+            },
+            "remoteReferences": {
+              "type": "array",
+              "items": {
+                "type": "object"
+              }
+            },
+            "requirementCoverage": {
+              "type": "array",
+              "items": {
+                "type": "object"
+              }
+            },
+            "delimiterEnd": {
+              "const": "-----END UNTRUSTED EVIDENCE CONTENT-----"
+            }
+          },
+          "additionalProperties": false
+        },
+        "packetDigest": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

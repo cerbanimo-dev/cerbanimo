@@ -1,0 +1,9 @@
+{
+  "name": "@cerbanimo/evidence-store",
+  "version": "0.3.0-packet.003",
+  "private": true,
+  "type": "module",
+  "exports": "./src/index.mjs",
+  "dependencies": { "@cerbanimo/proof": "0.3.0-packet.003" },
+  "engines": { "node": ">=22.16.0" }
+}

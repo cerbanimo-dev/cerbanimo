@@ -1,0 +1,29 @@
+{
+  "name": "@cerbanimo/production-successor",
+  "version": "0.3.0-packet.003",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "packages/*"
+  ],
+  "engines": {
+    "node": ">=22.16.0"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json && node scripts/verify-frozen-schemas.mjs",
+    "test": "npm run test:packet000 && npm run test:packet0011 && npm run test:packet002 && npm run test:packet003",
+    "test:packet000": "node --test tests/compatibility/*.test.mjs",
+    "test:packet001": "npm run build && node --test tests/contracts/*.test.mjs",
+    "test:packet0011": "npm run test:packet001",
+    "test:packet002": "npm run build && node --test tests/storage/*.test.mjs",
+    "test:packet003": "npm run build && node --test tests/packet-003/*.test.mjs",
+    "verify:schemas-v1": "node scripts/verify-frozen-schemas.mjs",
+    "verify:publication": "node scripts/verify-publication-boundary.mjs",
+    "test:reference": "node --test tests/compatibility/reference-node.test.mjs",
+    "test:catalog": "node --test tests/compatibility/scenario-catalog.test.mjs"
+  },
+  "devDependencies": {
+    "@types/node": "22.16.5",
+    "typescript": "5.9.3"
+  }
+}

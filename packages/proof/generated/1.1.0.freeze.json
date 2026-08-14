@@ -1,0 +1,7 @@
+{
+  "schema": "evidence-proof-1.1.0.schema.json",
+  "bytes": 38452,
+  "sha256": "98941c1ce53db8b62073db611cbaacefe7ef7f959f0f5e9eb02ae04007c701d6",
+  "frozenAt": "2026-07-23T00:00:00.000Z",
+  "status": "accepted-immutable"
+}

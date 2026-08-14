@@ -1,0 +1,36 @@
+{
+  "fixtureVersion": "packet-000/1",
+  "referenceVersion": "0.4.0",
+  "id": "audit-escrow",
+  "goldenScenarios": ["G-013", "G-014", "G-021", "G-023"],
+  "requests": [
+    {
+      "phase": "policy",
+      "method": "PUT",
+      "path": "/api/federations/<home-federation-id>/policy",
+      "body": {
+        "auditSampleRate": 100,
+        "auditQuorum": 2,
+        "reviewerSampleSize": 2
+      }
+    },
+    {
+      "phase": "submit",
+      "method": "POST",
+      "path": "/api/tasks/<active-task-id>/submit",
+      "body": {
+        "evidence": "<concrete-evidence>",
+        "proofLinks": ["field://packet-000-audit"]
+      }
+    }
+  ],
+  "observedResponse": {
+    "policyStatus": 200,
+    "requiredVotes": 2,
+    "submissionStatus": 200,
+    "pendingAudit": true,
+    "verifiedBeforeQuorum": false,
+    "coinsBeforeQuorum": 0,
+    "separateNodeIdentities": true
+  }
+}
